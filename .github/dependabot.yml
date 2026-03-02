@@ -1,0 +1,49 @@
+version: 2
+update:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interwal: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-request-limit: 5
+    reviewers:
+      - "Rackkoun"
+      - "Aloknath96"
+    assignees:
+      - "Rackkoun"
+    labels:
+      - "dependencies"
+    allow:
+      - dependency-type: "production"
+      - dependency-type: "development"
+    ignore:
+      # Ignore major updates for ML libraries (test thoroughly first)
+      - dependency-name: "torch"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "tensorflow"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "scikit-learn"
+        update-types: ["version-update:semver-major"]
+      # Ignore major updates for LLM-related packages
+      - dependency-name: "llama-index*"
+        update-types: ["version-update:semver-major"]
+        
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "YOUR_GITHUB_USERNAME"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "ci-cd"
+    commit-message:
+      prefix: "gha"
+      include: "scope"

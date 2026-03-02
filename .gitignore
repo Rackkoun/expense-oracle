@@ -20,11 +20,9 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -92,7 +90,7 @@ ipython_config.py
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
 #   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
-#Pipfile.lock
+Pipfile.lock
 
 # UV
 #   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
@@ -143,6 +141,13 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.env.local
+.env.*.local
+!.env.example
+secrets/
+*.key
+*.pem
+.llmenv
 
 # Spyder project settings
 .spyderproject
@@ -224,3 +229,14 @@ data/*
 *.sqlite3
 vector_store/
 chroma_db/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+tmp/
+temp/
+*.tmp
+*.bak
+
+# OS
+Thumbs.db
