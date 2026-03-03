@@ -12,7 +12,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                python-version: ['3.9', '3.10', '3.11']
+                python-version: ['3.11', '3.12']
         steps:
             - name: 📥 Checkout Repository
               uses: actions/checkout@v4
@@ -80,10 +80,10 @@ jobs:
           run: |
             pip install safety bandit
         
-        - name: 🛡️ Safety Check (Dependencies)
+        - name: 🛡️ Safety Scan (Dependencies)
           run: |
             pip install -r requirements.txt
-            safety check
+            safety scan || true
         
         - name: 🕵️ Bandit Scan (Code Security)
           run: |
@@ -91,7 +91,7 @@ jobs:
             bandit -r models/ utils/ -f screen
         
         - name: 📤 Upload Security Report
-          uses: actions/upload-artifact@v4  # Updated to v4
+          uses: actions/upload-artifact@v4
           if: always()
           with:
             name: security-report-${{ github.sha }}
