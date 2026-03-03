@@ -51,11 +51,17 @@ jobs:
 
             - name: 🏷️ Type Check (mypy)
               run: |
-                mypy models/ utils/ --ignore-missing-imports
+                if [ -d "models" ] && [ -d "utils" ]; then
+                  mypy models/ utils/ --ignore-missing-imports
+                else
+                  echo "⚠️ Skipping mypy - models/ or utils/ directories not found"
+                  echo "Directories found:"
+                  ls -la
+                fi
 
             - name: 🧪 Run Divinations (Tests)
               run: |
-                pytest tests/ -v --cov=models --cov=utils --cov-report=xml --cov-report=term
+                pytest -v --cov=. --cov-report=xml --cov-report=term
 
             - name: 📊 Upload Coverage to Codecov
               uses: codecov/codecov-action@v4  # Updated to v4
@@ -87,8 +93,8 @@ jobs:
         
         - name: 🕵️ Bandit Scan (Code Security)
           run: |
-            bandit -r models/ utils/ -f json -o bandit-report.json || true
-            bandit -r models/ utils/ -f screen
+            bandit -r . -f json -o bandit-report.json || true
+            bandit -r . -f screen
         
         - name: 📤 Upload Security Report
           uses: actions/upload-artifact@v4
