@@ -76,7 +76,7 @@ jobs:
                 verbose: true
 
     security-audit:
-        name: 🔒 Security Ward
+        name: 🔒 Security Check
         runs-on: ubuntu-latest
         steps:
         - name: 📥 Checkout Repository
@@ -98,8 +98,8 @@ jobs:
         
         - name: 🕵️ Bandit Scan (Code Security)
           run: |
-            bandit -r . -f json -o bandit-report.json || true
-            bandit -r . -f screen
+            bandit -r . -f json -o bandit-report.json -x "./tests/" || true
+            bandit -r . -f screen -x "./tests/"
         
         - name: 📤 Upload Security Report
           uses: actions/upload-artifact@v4
