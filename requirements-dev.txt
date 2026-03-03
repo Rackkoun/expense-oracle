@@ -1,0 +1,25 @@
+# Testing
+pytest
+pytest-cov
+pytest-asyncio
+pytest-mock
+requests-mock
+# Code Quality
+black
+isort
+flake8
+ruff
+mypy
+pre-commit
+# EDA
+jupyter
+ipython
+# Security
+bandit
+safety
+# Documentation
+mkdocs
+mkdocs-material
+# Profiling
+memory-profiler
+line-profiler

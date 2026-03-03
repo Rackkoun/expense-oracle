@@ -1,0 +1,78 @@
+name: 🔮 Branch Naming Oracle
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate-branch-name:
+    name: Validate Sacred Branch Name
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Inspect Branch Name
+        id: validate
+        run: |
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          echo "Validating branch: $BRANCH_NAME"
+          
+          # Define the sacred pattern
+          # Format: type/scope/description
+          # Types: features, tests, docs, bugfix, hotfix, refactor, chore, release
+          # Scope: alphanumeric with hyphens
+          # Description: lowercase, hyphens, max 50 chars
+          
+          PATTERN="^(features|tests|docs|bugfix|hotfix|refactor|chore|release)\/[a-z0-9-]+\/[a-z0-9-]{1,50}$"
+          
+          if [[ $BRANCH_NAME =~ $PATTERN ]]; then
+            echo "✅ Branch name follows the Oracle's conventions"
+            echo "Type: ${BASH_REMATCH[1]}"
+            
+            # Extract components for logging
+            TYPE=$(echo "$BRANCH_NAME" | cut -d'/' -f1)
+            SCOPE=$(echo "$BRANCH_NAME" | cut -d'/' -f2)
+            DESC=$(echo "$BRANCH_NAME" | cut -d'/' -f3-)
+            
+            echo "Scope: $SCOPE"
+            echo "Description: $DESC"
+            exit 0
+          else
+            echo "❌ Branch name violates the Oracle's sacred patterns!"
+            echo ""
+            echo "Current name: $BRANCH_NAME"
+            echo ""
+            echo "Expected format: <type>/<scope>/<description-short>"
+            echo ""
+            echo "Valid types:"
+            echo "  - features/  (New capabilities)"
+            echo "  - tests/     (Testing infrastructure)"
+            echo "  - docs/      (Documentation)"
+            echo "  - bugfix/    (Bug fixes)"
+            echo "  - hotfix/    (Critical fixes)"
+            echo "  - refactor/  (Code restructuring)"
+            echo "  - chore/     (Maintenance)"
+            echo "  - release/   (Version releases)"
+            echo ""
+            echo "Examples:"
+            echo "  features/configs/repo-configuration"
+            echo "  tests/frontend/data-viz-testing"
+            echo "  docs/readme-updated"
+            echo ""
+            echo "See CONTRIBUTING.md for full guidelines."
+            exit 1
+          fi
+      
+      - name: 📊 Report Status
+        if: failure()
+        run: |
+          echo "::error::Branch naming validation failed! Please rename your branch."
+          echo "::error::Use: git checkout -b <new-name>"
